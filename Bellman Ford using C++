@@ -1,0 +1,108 @@
+ //Bellman Ford Algorithem
+// The main function that finds shortest distances from src
+// to all other vertices using Bellman-Ford algorithm.  The
+// function also detects negative weight cycle
+#include <bits/stdc++.h>
+#include<iostream>
+using namespace std;
+struct Edge {
+    int SRC, Dest, Weight;
+};
+struct Graph {
+    int V, E;
+    struct Edge* edge;
+};
+struct Graph* createGraph(int V, int E)
+{
+    struct Graph* graph = new Graph;
+    graph->V = V;
+    graph->E = E;
+    graph->edge = new Edge[E];
+    return graph;
+}
+void printArr(int distance[], int n)
+{
+    printf("Vertex     Distance from Source\n");
+    for (int i = 0; i < n; ++i)
+        cout<<i<<"\t\t-->\t\t"<<distance[i]<<"\n";
+}
+void BellmanFord(struct Graph* graph, int SRC)
+{
+    int V = graph->V;
+    int E = graph->E;
+    int distance[V];
+    for (int i = 0; i < V; i++)
+        distance[i] = INT_MAX;
+    distance[SRC] = 0;
+    for (int i = 1; i <= V - 1; i++) {
+        for (int j = 0; j < E; j++) {
+            int u = graph->edge[j].SRC;
+            int v = graph->edge[j].Dest;
+            int Weight = graph->edge[j].Weight;
+            if (distance[u] != INT_MAX
+                && distance[u] + Weight < distance[v])
+                distance[v] = distance[u] + Weight;
+        }
+    }
+    for (int i = 0; i < E; i++) {
+        int u = graph->edge[i].SRC;
+        int v = graph->edge[i].Dest;
+        int Weight = graph->edge[i].Weight;
+        if (distance[u] != INT_MAX
+            && distance[u] + Weight < distance[v]) {
+            cout<<"Graph contains negative weight cycle";
+            return; 
+        }
+    }
+    printArr(distance, V);
+    return;
+}
+int main()
+{
+    int V = 5; 
+    int E = 8;
+    struct Graph* graph = createGraph(V, E);
+
+    graph->edge[0].SRC = 0;
+    graph->edge[0].Dest = 1;
+    graph->edge[0].Weight = -1;
+
+    graph->edge[1].SRC = 0;
+    graph->edge[1].Dest = 2;
+    graph->edge[1].Weight = 4;
+
+    graph->edge[2].SRC = 1;
+    graph->edge[2].Dest = 2;
+    graph->edge[2].Weight = 3;
+
+    graph->edge[3].SRC = 1;
+    graph->edge[3].Dest = 3;
+    graph->edge[3].Weight = 2;
+
+    graph->edge[4].SRC = 1;
+    graph->edge[4].Dest = 4;
+    graph->edge[4].Weight = 2;
+
+    graph->edge[5].SRC = 3;
+    graph->edge[5].Dest = 2;
+    graph->edge[5].Weight = 5;
+ 
+    graph->edge[6].SRC = 3;
+    graph->edge[6].Dest = 1;
+    graph->edge[6].Weight = 1;
+
+    graph->edge[7].SRC = 4;
+    graph->edge[7].Dest = 3;
+    graph->edge[7].Weight = -3;
+ 
+    BellmanFord(graph, 0);
+ 
+    return 0;
+}
+//Output-
+//Vertex     Distance from Source
+//0		-->		0
+//1		-->		-1
+//2		-->		2
+//3		-->		-2
+//4		-->		1
