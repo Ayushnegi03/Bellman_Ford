@@ -32,7 +32,7 @@ g.AddEdge(2, 4, 3)
 g.AddEdge(2, 3, 4)
 g.AddEdge(4, 3, -5)
 g.BellmanFord(0)
-#Output-
+#Output->
 #Vertex Distance from the source:
 #0               0
 #1               2
